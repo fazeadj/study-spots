@@ -1,44 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>USC Study Spots</title>
-   <style>
-    h1 {
-      color: #990000;
-    }
-    body {
-      background-color: #faf7f2;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trojan Study Spots</title>
+<style>
+  :root {
+    --cardinal: #990000;
+    --gold: #ffcc00;
+    --bg: #faf7f2;
+    --ink: #222;
+    --muted: #666;
+    --line: #ddd5c8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  header {
+    background: var(--cardinal);
+    color: #fff;
+    padding: 40px 20px 32px;
+    border-bottom: 6px solid var(--gold);
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; font-family: Georgia, serif; font-size: 2.2rem; }
+  header p { margin: 0; max-width: 55ch; }
+  main { padding: 24px 20px 48px; }
+  .controls { display: grid; gap: 14px; margin-bottom: 20px; }
+  input[type="search"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+  input[type="search"]:focus, button:focus-visible, a:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filters button {
+    padding: 8px 14px;
+    border: 2px solid var(--cardinal);
+    background: #fff;
+    color: var(--cardinal);
+    border-radius: 999px;
+    font-size: .95rem;
+    cursor: pointer;
+  }
+  .filters button[aria-pressed="true"] { background: var(--cardinal); color: #fff; }
+  #count { color: var(--muted); margin: 0 0 12px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--cardinal);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .card h2 { margin: 0 0 2px; font-family: Georgia, serif; font-size: 1.2rem; }
+  .card .where { margin: 0 0 8px; color: var(--muted); font-size: .9rem; }
+  .card .notes { margin: 0 0 12px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: #f3ecdc; border-radius: 4px; padding: 2px 8px; font-size: .8rem; }
+  .empty { padding: 24px; text-align: center; color: var(--muted); }
+  .suggest {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 12px 20px;
+    background: var(--gold);
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+  }
+  .links { margin-top: 20px; }
+  footer { padding: 0 20px 40px; color: var(--muted); font-size: .85rem; }
+</style>
 </head>
 <body>
 
-  <h1>USC Study Spots</h1>
-  <p>Find a place to study on campus!</p>
+<header>
+  <div class="wrap">
+    <h1>Trojan Study Spots</h1>
+    <p>Find a place to study on campus. Filter by what you need, or search by name.</p>
+  </div>
+</header>
 
-  <h2>Leavey Library</h2>
-  <ul>
-    <li>Study pods</li>
-    <li>Group rooms</li>
-    <li>Tables</li> 
-  </ul>
+<main class="wrap">
+  <div class="controls">
+    <input type="search" id="search" placeholder="Search spots (e.g. Leavey)" aria-label="Search study spots">
+    <div class="filters" id="filters" role="group" aria-label="Filter by tag"></div>
+  </div>
 
-  
-  <p>Study pods and group rooms for reservation on the website: https://libcal.usc.edu/</p>
-  </p>tables for studying.</p>th
+  <p id="count"></p>
+  <div class="grid" id="grid"></div>
 
-  <h2>University Gateway</h2>
-  <p>Open 24/7</p>
-  <p>Study rooms on each floor, plus a main study room on the second floor.</p>
-  <p>Must be a resident or know someone who lives there.</p>
+  <!-- Replace the # below with your Google Form link -->
+  <a class="suggest" href="#" target="_blank" rel="noopener">Suggest a spot</a>
 
-  <h2>Engineering and Science Library</h2>
-  <p>A library on the second floor that is somewhat quiet.</p>
+  <p class="links"><a href="about.html">Helpful Links</a></p>
+</main>
 
-  <h2>Ginsburg Hall</h2>
-  <p>Study pods, plus some tables and chairs. Somewhat noisy and always busy.</p>
+<footer class="wrap">
+  <p>A student-run project. Not an official USC website.</p>
+</footer>
+
+<script>
+  // ADD OR EDIT SPOTS HERE. Each spot is one block between { }.
+  const spots = [
+    {
+      name: "Leavey Library",
+      location: "Leavey Library",
+      notes: "Study pods, group rooms, and tables for studying.",
+      tags: ["Study pods", "Group rooms", "Tables"]
+    },
+    {
+      name: "University Gateway",
+      location: "University Gateway",
+      notes: "Study rooms on each floor, plus a main study room on the second floor.",
+      tags: ["Study rooms", "Main study room"]
+    },
+    {
+      name: "Engineering and Science Library",
+      location: "Engineering and Science Library, 2nd floor",
+      notes: "A library on the second floor that is somewhat quiet.",
+      tags: ["Somewhat quiet", "Library"]
+    },
+    {
+      name: "Ginsburg Hall",
+      location: "Ginsburg Hall",
+      notes: "Study pods, plus some tables and chairs. Somewhat noisy and always busy.",
+      tags: ["Study pods", "Tables", "Noisy", "Busy"]
+    }
+  ];
+
+  const grid = document.getElementById("grid");
+  const filtersEl = document.getElementById("filters");
+  const searchEl = document.getElementById("search");
+  const countEl = document.getElementById("count");
+  const active = new Set();
+
+  // Build filter buttons from all tags used in the spots list
+  const allTags = [...new Set(spots.flatMap(s => s.tags))].sort();
+  allTags.forEach(tag => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = tag;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => {
+      if (active.has(tag)) active.delete(tag); else active.add(tag);
+      b.setAttribute("aria-pressed", active.has(tag));
+      render();
+    });
+    filtersEl.appendChild(b);
+  });
+
+  function render() {
+    const q = searchEl.value.trim().toLowerCase();
+    const shown = spots.filter(s =>
+      [...active].every(t => s.tags.includes(t)) &&
+      (s.name + " " + s.location + " " + s.notes).toLowerCase().includes(q)
+    );
+
+    countEl.textContent = shown.length + (shown.length === 1 ? " spot" : " spots");
+    grid.innerHTML = "";
+
+    if (shown.length === 0) {
+      grid.innerHTML = '<p class="empty">No spots match. Try removing a filter or clearing the search.</p>';
+      return;
+    }
+
+    shown.forEach(s => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML =
+        "<h2></h2><p class='where'></p><p class='notes'></p><div class='tags'></div>";
+      card.querySelector("h2").textContent = s.name;
+      card.querySelector(".where").textContent = s.location;
+      card.querySelector(".notes").textContent = s.notes;
+      const tagBox = card.querySelector(".tags");
+      s.tags.forEach(t => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagBox.appendChild(span);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  searchEl.addEventListener("input", render);
+  render();
+</script>
 
 
   <h2>For more information about study pods, locations, and suggestions, click here</h2>
